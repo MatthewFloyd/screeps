@@ -13,7 +13,8 @@ module.exports.loop = function () {
             console.log('Clearing non-existing creep memory:', name);
         }
     }
-    
+
+
     /*for(var roomName in Game.rooms) {
         var room = Game.rooms[roomName];
         if(!room.memory.containers) {
