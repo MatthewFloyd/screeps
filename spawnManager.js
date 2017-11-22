@@ -147,18 +147,23 @@
                  return parts; // Don't want to make the best possible, want it to be cheap.
                  break;
              default:
-                parts = [WORK,CARRY,MOVE,MOVE];
+                parts = [WORK,CARRY,MOVE];
          }
          var e = this.R.energyAvailable;
+         console.log('------');
          for(var part in parts)
          {
-             if(BODYPART_COST[part] <= e)
+             console.log(BODYPART_COST[parts[part]]);
+             if(BODYPART_COST[parts[part]] <= e)
              {
-                 parts.push(part);
-                 e -= BODYPART_COST[part];
+                 parts.push(parts[part]);
+                 e -= BODYPART_COST[parts[part]];
              }
          }
-         
+         for(var p in parts)
+         {
+             console.log(parts[p]);
+         }
          
          return parts;
      }
