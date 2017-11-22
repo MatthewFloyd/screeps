@@ -11,6 +11,7 @@
  var roleUpgrader = require('roleUpgrader');
  var roleBuilder = require('roleBuilder');
  var roleShifter = require('roleShifter');
+ var roleRepairer = require('roleRepairer');
  
  var spawnManager = {
      
@@ -26,7 +27,17 @@
          this.containers = this.R.find(FIND_STRUCTURES, {
              filter: (s) => {return s.structureType == STRUCTURE_CONTAINER}
          });
-         
+         var repairJobs = this.containers.sort(function(a, b) {
+             return b.hits - a.hits
+         });
+         if(repairJobs[0].hits < repairJobs[0].hitsMax / 2)
+         {
+            repairJobs = repairJobs[0];
+         }
+         else
+         {
+             repairJobs = undefined;
+         }
          
          // TODO:
          //     Make creeps as large as able.
@@ -41,6 +52,7 @@
          var upgraders = _.filter(this.C, (creep) => creep.memory.role == 'upgrader');
          var builders = _.filter(this.C, (creep) => creep.memory.role == 'builder');
          var shifters = _.filter(this.C, (creep) => creep.memory.role == 'shifter');
+         var repairers = _.filter(this.C, (creep) => creep.memory.role == 'repairer');
          
          let cJobs = Game.rooms[room].find(FIND_MY_CONSTRUCTION_SITES);
          
@@ -105,6 +117,10 @@
          {
              this.createCustomCreep('builder', spawn);
          }
+         else if(repairJobs && repairers < 1)
+         {
+             this.createCustomCreep('repairer', spawn);
+         }
          for(var name in this.C)
          {
             let c = this.C[name];
@@ -119,6 +135,9 @@
             }
             else if(c.memory.role == 'shifter') {
                 roleShifter.run(c);
+            }
+            else if (c.memory.role == 'repairer') {
+                roleRepairer.run(c);
             }
             else {
                 console.log("Creep name: " + c.name + " doesn't have a role!");
@@ -145,6 +164,10 @@
              case 'scout':
                  parts = [TOUGH,MOVE,ATTACK];
                  return parts; // Don't want to make the best possible, want it to be cheap.
+                 break;
+             case 'repairer':
+                 parts = [WORK,CARRY,MOVE]; // same as above
+                 return parts;
                  break;
              default:
                 parts = [WORK,CARRY,MOVE];
