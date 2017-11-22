@@ -150,19 +150,13 @@
                 parts = [WORK,CARRY,MOVE];
          }
          var e = this.R.energyAvailable;
-         console.log('------');
          for(var part in parts)
          {
-             console.log(BODYPART_COST[parts[part]]);
              if(BODYPART_COST[parts[part]] <= e)
              {
                  parts.push(parts[part]);
                  e -= BODYPART_COST[parts[part]];
              }
-         }
-         for(var p in parts)
-         {
-             console.log(parts[p]);
          }
          
          return parts;
