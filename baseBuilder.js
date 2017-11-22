@@ -51,19 +51,25 @@ var baseBuilder = {
          // Build stuff
          if (extensions.length < maxExtensions)
          {
-             for(var x = 0; x < extensionLocations.length; x++)
+             if(extensionLocations != 0)
              {
-                 if(this.addConstructionSite(STRUCTURE_EXTENSION, extensionLocations[x][0], extensionLocations[x][1]) == false)
-                 {
-                     continue;
-                 }
+                  for(var x = 0; x < extensionLocations.length; x++)
+                  {
+                      if(this.addConstructionSite(STRUCTURE_EXTENSION, extensionLocations[x][0], extensionLocations[x][1]) == false)
+                      {
+                          continue;
+                      }
+                  }
              }
-             for(var y = 0; y < roadLocations.length; y++)
+             if(roadLocations != 0)
              {
-                 if(this.addConstructionSite(STRUCTURE_ROAD, roadLocations[y][0], roadLocations[y][1]) == false)
-                 {
-                     continue;
-                 }
+                  for(var y = 0; y < roadLocations.length; y++)
+                  {
+                      if(this.addConstructionSite(STRUCTURE_ROAD, roadLocations[y][0], roadLocations[y][1]) == false)
+                      {
+                          continue;
+                      }
+                  }
              }
              return false;
          }
@@ -116,6 +122,9 @@ var baseBuilder = {
                     [this.X + 2, this.Y + 2],
                     [this.X + 1, this.Y + 3]]
          }
+          else {
+               return 0;
+          }
      },
      
      getRoadLocations: function(controllerLevel) {
@@ -145,6 +154,9 @@ var baseBuilder = {
                     [this.X + 1, this.Y + 1],
                     [this.X + 1, this.Y + 2]]
          }
+          else {
+               return 0;
+          }
      },
      
      getTowerLocations: function(controllerLevel) {
@@ -152,6 +164,10 @@ var baseBuilder = {
          {
              return [[this.X + 3, this.Y]]
          }
+          else
+          {
+               return 0;
+          }
      },
      
      visual: function(controllerLevel) {
