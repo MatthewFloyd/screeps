@@ -29,7 +29,7 @@ module.exports.loop = function () {
         spawnManager.run(room);
         let controller = Game.getObjectById(Game.rooms[room].memory.controller[0]);
         
-        if(controller.level != Game.rooms[room].memory.setupLevel)
+        if(controller.level > 1 && controller.level != Game.rooms[room].memory.setupLevel)
         {
             baseBuilder.run(room);
             //Game.rooms[room].memory.setupLevel = controller.level;
