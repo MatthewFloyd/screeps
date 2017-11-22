@@ -19,6 +19,10 @@ module.exports = {
 	        {
 	            creep.moveTo(R[0]);
 	        }
+	        if(creep.carry.energy == 0)
+	        {
+	            creep.memory.upgrading = false;
+	        }
         }
         else {
             let resourcePoints = [];
