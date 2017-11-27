@@ -65,7 +65,7 @@
          if (harvesters.length < 3)
          {
             var harvestSource = this.R.memory.sources;
-            if(this.containers == undefined)
+            if(this.containers.length < 1)
             {
                 if(harvestSource == undefined)
                 {
