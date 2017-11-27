@@ -28,7 +28,7 @@ var baseBuilder = {
          this.Y = spawn.pos.y;
          
          let controller = Game.getObjectById(this.R.memory.controller[0]);
-         this.visual(controller.level);
+         //this.visual(controller.level);
          if(this.build(controller.level) == true)
          {
              this.R.memory.setupLevel = controller.level;
@@ -46,7 +46,7 @@ var baseBuilder = {
          });
          var extensionLocations = this.getExtensionLocations(controllerLevel);
          var roadLocations = this.getRoadLocations(controllerLevel);
-         //var towerLocations = this.getTowerLocations(controllerLevel);
+         var towerLocations = this.getTowerLocations(controllerLevel);
          
          // Build stuff
          if (extensions.length < maxExtensions)
@@ -66,6 +66,16 @@ var baseBuilder = {
                   for(var y = 0; y < roadLocations.length; y++)
                   {
                       if(this.addConstructionSite(STRUCTURE_ROAD, roadLocations[y][0], roadLocations[y][1]) == false)
+                      {
+                          continue;
+                      }
+                  }
+             }
+             if(towerLocations != 0)
+             {
+                 for(var y = 0; y < towerLocations.length; y++)
+                  {
+                      if(this.addConstructionSite(STRUCTURE_TOWER, towerLocations[y][0], towerLocations[y][1]) == false)
                       {
                           continue;
                       }
@@ -162,12 +172,12 @@ var baseBuilder = {
      getTowerLocations: function(controllerLevel) {
          if(controllerLevel == 3)
          {
-             return [[this.X + 3, this.Y]]
+            return [[this.X + 3, this.Y]]
          }
-          else
-          {
-               return 0;
-          }
+         else
+         {
+            return 0;
+         }
      },
      
      visual: function(controllerLevel) {
@@ -187,13 +197,13 @@ var baseBuilder = {
              this.R.visual.line(this.X - 1, this.Y - 2, this.X - 1, this.Y + 2);
              this.R.visual.line(this.X + 1, this.Y - 2, this.X + 1, this.Y + 2);
          }
-         if(controllerLevel >= 2)
+         if(controllerLevel >= 3)
          {
-             this.R.visual.circle(this.X - 2, this.Y - 2);
-             this.R.visual.circle(this.X - 2, this.Y + 2);
+             this.R.visual.circle(this.X + 1, this.Y - 3);
+             this.R.visual.circle(this.X + 3, this.Y - 1);
+             this.R.visual.circle(this.X + 3, this.Y + 1);
              this.R.visual.circle(this.X + 2, this.Y + 2);
-             this.R.visual.circle(this.X + 4, this.Y - 2);
-             this.R.visual.circle(this.X + 4, this.Y);
+             this.R.visual.circle(this.X + 1, this.Y + 3);
          }
      }
  }
