@@ -27,18 +27,24 @@
          this.containers = this.R.find(FIND_STRUCTURES, {
              filter: (s) => {return s.structureType == STRUCTURE_CONTAINER}
          });
-         var repairJobs = this.containers.sort(function(a, b) {
-             return b.hits - a.hits
-         });
-         if(repairJobs[0].hits < repairJobs[0].hitsMax / 2)
+         if(this.containers[0] == undefined)
          {
-            repairJobs = repairJobs[0];
+             this.containers = [];
          }
          else
          {
-             repairJobs = undefined;
+             var repairJobs = this.containers.sort(function(a, b) {
+                 return b.hits - a.hits
+             });
+             if(repairJobs.length > 0 && repairJobs[0].hits < repairJobs[0].hitsMax / 2)
+             {
+                repairJobs = repairJobs[0];
+             }
+             else
+             {
+                 repairJobs = undefined;
+             }
          }
-         
          // TODO:
          //     Make creeps as large as able.
          //     Make harvesters not get carry parts when there is at least one container in the room. 
@@ -109,7 +115,7 @@
                 console.log('Spawning new upgrader: ' + newName);
             }
          }
-         else if(this.containers.length > 0 && shifters.length < this.containers.length * 2)
+         else if(this.containers.length > 0 && shifters.length < this.containers.length)
          {
              this.createCustomCreep('shifter', spawn);
          }
@@ -154,6 +160,7 @@
      
      creepParts: function(creepType) {
          var parts = [];
+         var exempt = CARRY;
          switch (creepType) {
              case 'builder':
                  parts =  [WORK,CARRY,CARRY,MOVE,MOVE];
@@ -175,13 +182,16 @@
          var e = this.R.energyAvailable;
          for(var part in parts)
          {
-             if(BODYPART_COST[parts[part]] <= e)
+             e -= BODYPART_COST[parts[part]];
+         }
+         for(var part in parts)
+         {
+             if(BODYPART_COST[parts[part]] <= e && parts[part] != exempt)
              {
                  parts.push(parts[part]);
                  e -= BODYPART_COST[parts[part]];
              }
          }
-         
          return parts;
      }
  }
