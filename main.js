@@ -12,7 +12,7 @@ module.exports.loop = function () {
         }
     }
     
-    if(!Memory.setup) { // Triggers calc of all rooms that haven't set memory before.
+    if(!Memory.setup && Game.time % 15 == 0) { // Triggers calc of all rooms that haven't set memory before.
         Memory.setup = {};
         Memory.setup = 1;
         
@@ -28,9 +28,14 @@ module.exports.loop = function () {
     {
         spawnManager.run(room);
         let controller = Game.getObjectById(Game.rooms[room].memory.controller[0]);
+        if(!room.memory)
+        {
+            setup.run(Game.rooms[room]);
+        }
         
         if(controller.level > 1 && controller.level != Game.rooms[room].memory.setupLevel)
         {
+            setup.run(Game.rooms[room]);
             baseBuilder.run(room);
             //Game.rooms[room].memory.setupLevel = controller.level;
         }
