@@ -6,10 +6,10 @@ Features some automated base-building and distribution of creeps to seperate sou
 job creation. Will function well up to level 3.
 
 # TODO LIST
-- Add in room taking
+- Add in room taking - almost there
 - Better harvest code
 - Basic offense/defense
-- Tower AI
-- Scouting + setup memory for new rooms
+- Tower AI - Advanced
+- Scouting for new rooms
 - Custom road creation to important areas of room.
 - Support for level 4 and up
