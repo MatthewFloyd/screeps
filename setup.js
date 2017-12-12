@@ -11,18 +11,22 @@
      
      /** @param {room} room **/
      run: function(room) {
-         
          let c = room.controller;
          
-         Memory.rooms = {};
-         Memory.rooms[room.name];
+         Memory.danger = {};
+         Memory.target = {};
+         if(!Memory.rooms)
+         {
+             Memory.rooms = {};
+             Memory.rooms[room.name];
+         }
          room.memory.setupLevel = {};
          room.memory.spawns = {};
          room.memory.sources = {};
          room.memory.controller = {};
          room.memory.minerals = {};
+         room.memory.extensions = {};
          room.memory.queue = {};
-         
          
          let spawns = room.find(FIND_MY_STRUCTURES, {
              filter: (s) => {return (s.structureType == STRUCTURE_SPAWN)}
@@ -52,7 +56,17 @@
                  room.memory.minerals[y] = ID;
              }
          }
-         room.memory.setupLevel = 1;
+         let e = room.find(FIND_MY_STRUCTURES, {
+             filter: (s) => {return (s.structureType == STRUCTURE_EXTENSION)}
+         });
+         for(var t = 0; t < e.length; t++) {
+             let ID = e[t].id;
+             room.memory.extensions[t] = ID;
+         }
+         //room.memory.setupLevel = room.controller.level;
+         
+         
+         //console.log(room.name + " " + room.memory.spawns[0]);
      }
  }
 
