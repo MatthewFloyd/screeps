@@ -40,7 +40,7 @@ var roleBuilder = {
                 for(var spawn in creep.room.memory.spawns)
                 {
                     let s = Game.getObjectById(creep.room.memory.spawns[spawn]);
-                    if(s.energy >= 200)
+                    if(s.energy > 250)
                     {
                         resourcePoints.push(s);
                     }
