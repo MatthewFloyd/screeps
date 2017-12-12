@@ -28,9 +28,43 @@ var roleUpgrader = {
 	        let harvestSource = Game.getObjectById(creep.room.memory.sources[1]); // TODO fix this
 	        if(spawn.energy < 250)
 	        {
-                if(creep.harvest(harvestSource, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+	            var resourcePoints = [];
+	            if(creep.room.memory.extensions)
                 {
-                    creep.moveTo(harvestSource, {visualizePathStyle: {stroke: '#ffaa00'}});
+                    for(var e in creep.room.memory.extensions)
+                    {
+                        let a = Game.getObjectById(creep.room.memory.extensions[e]);
+                        if(a.energy > 0)
+                        {
+                            resourcePoints.push(a);
+                        }
+                    }
+                }
+                if(resourcePoints.length > 0)
+                {
+                    if(creep.withdraw(resourcePoints[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    {
+                        creep.moveTo(resourcePoints[0]);
+                    }
+                }
+                else
+                {
+                    var storagePoint = creep.room.find(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_STORAGE});
+                    if(storagePoint.length > 0)
+                    {
+                        var nearest = creep.pos.findClosestByRange(storagePoint);
+                        if(creep.withdraw(nearest) == ERR_NOT_IN_RANGE)
+                        {
+                            creep.moveTo(nearest);
+                        }
+                    }
+                    else
+                    {
+                        if(creep.harvest(harvestSource, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        {
+                            creep.moveTo(harvestSource, {visualizePathStyle: {stroke: '#ffaa00'}});
+                        }
+                    }
                 }
 	        }
 	        else
