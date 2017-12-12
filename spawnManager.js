@@ -12,45 +12,44 @@
  var roleBuilder = require('roleBuilder');
  var roleShifter = require('roleShifter');
  var roleRepairer = require('roleRepairer');
+ var roleScout = require('roleScout');
  
  var spawnManager = {
      
      R: '',
      C: '',
      S: '',
-     containers: [],
+     jobMakers: [],
      /** @param {room} room **/
      run: function(room) {
          
          this.R = Game.rooms[room];
+         if(this.R.memory.spawns != undefined)
+         {
          this.C = this.R.find(FIND_MY_CREEPS);
-         this.containers = this.R.find(FIND_STRUCTURES, {
+         this.jobMakers = this.R.find(FIND_STRUCTURES, {
              filter: (s) => {return s.structureType == STRUCTURE_CONTAINER}
          });
-         if(this.containers[0] == undefined)
+         if(this.jobMakers[0] == undefined)
          {
-             this.containers = [];
+             this.jobMakers = [];
+         }
+         var repairJobs = this.jobMakers.sort(function(a, b) {
+             return a.hits - b.hits
+         });
+         /*if(repairJobs.length > 0 && repairJobs[0].hits < (4 * repairJobs[0].hitsMax) / 5)
+         {
+            repairJobs = repairJobs[0];
          }
          else
          {
-             var repairJobs = this.containers.sort(function(a, b) {
-                 return b.hits - a.hits
-             });
-             if(repairJobs.length > 0 && repairJobs[0].hits < repairJobs[0].hitsMax / 2)
-             {
-                repairJobs = repairJobs[0];
-             }
-             else
-             {
-                 repairJobs = undefined;
-             }
-         }
+             repairJobs = [];
+         }*/
          // TODO:
          //     Make creeps as large as able.
          //     Make harvesters not get carry parts when there is at least one container in the room. 
          //     Also, replace missing carry part with a work part and drop down to one move part.         
          //
-         
          
          var spawn = Game.getObjectById(this.R.memory.spawns[0]); // TODO: Work for multiple spawns
          this.S = spawn;
@@ -59,21 +58,29 @@
          var builders = _.filter(this.C, (creep) => creep.memory.role == 'builder');
          var shifters = _.filter(this.C, (creep) => creep.memory.role == 'shifter');
          var repairers = _.filter(this.C, (creep) => creep.memory.role == 'repairer');
+         var scouts = _.filter(this.C, (creep) => creep.memory.role == 'scout');
          
          let cJobs = Game.rooms[room].find(FIND_MY_CONSTRUCTION_SITES);
          
-         if (harvesters.length < 3)
+         if(this.S.hits <this.S.hitsMax / 2)
+         {
+             this.R.controller.activateSafeMode;
+             console.log("Safe mode has been activated in room " + this.R.name + "!!!");
+         }
+         
+         
+         if (harvesters.length < 4)
          {
             var harvestSource = this.R.memory.sources;
-            if(this.containers.length < 1)
-            {
+            //if(this.jobMakers.length < 1)
+            //{
                 if(harvestSource == undefined)
                 {
                     harvestSource = harvestSource[0];
                 }
                 else
                 {
-                    if(harvesters.length % 2 == 0)
+                    if(Game.time % 2 == 0)
                     {
                         harvestSource = harvestSource[0];
                     }
@@ -82,16 +89,16 @@
                         harvestSource = harvestSource[1];
                     }
                 }
-            }
-            else
+            //}
+            /*else
             {
                 var temp = [];
                 for(var s in harvestSource)
                 {
                     let a = Game.getObjectById(harvestSource[s]);
-                    for(var c in this.containers)
+                    for(var c in this.jobMakers)
                     {
-                        if(this.containers[c].store[RESOURCE_ENERGY] < this.containers[c].storeCapacity && a.pos.isNearTo(this.containers[c]))
+                        if(this.jobMakers[c].store[RESOURCE_ENERGY] < this.jobMakers[c].storeCapacity && a.pos.isNearTo(this.jobMakers[c]))
                         {
                             temp = harvestSource[s];
                         }
@@ -102,20 +109,24 @@
                     }
                 }
                 harvestSource = temp;
-            }
-            var newName = 'Harvester' + Game.time;
-            if(spawn.spawnCreep(this.creepParts('harvester'), newName, {memory: {role: 'harvester', s: harvestSource}}) == 0) {
-                console.log('Spawning new harvester: ' + newName);
+            }*/
+            var newName = 'Harvester' + Game.time % 1000;
+            if(spawn.spawnCreep(this.creepParts('harvester'), newName, {memory: {role: 'harvester', s: harvestSource, upgrading: false}}) == 0) {
+                console.log('Spawning new harvester: ' + newName + " in room " + this.R.name);
             }
          }
-         else if (upgraders.length < 3)
+         else if (upgraders.length < 4)
          {
-            var newName = 'Upgrader' + Game.time;
+            var newName = 'Upgrader' + Game.time % 1000;
             if(spawn.spawnCreep(this.creepParts('upgrader'), newName, {memory: {role: 'upgrader', upgrading: false}}) == 0) {
-                console.log('Spawning new upgrader: ' + newName);
+                console.log('Spawning new upgrader: ' + newName + " in room " + this.R.name);
             }
          }
-         else if(this.containers.length > 0 && shifters.length < this.containers.length)
+         else if(repairers.length < 1)
+         {
+             this.createCustomCreep('repairer', spawn);
+         }
+         else if(this.jobMakers.length > 0 && shifters.length < this.jobMakers.length * 2)
          {
              this.createCustomCreep('shifter', spawn);
          }
@@ -123,10 +134,10 @@
          {
              this.createCustomCreep('builder', spawn);
          }
-         else if(repairJobs && repairers < 1)
+         /*if(Memory.danger[0] == undefined && scouts.length < 1)
          {
-             this.createCustomCreep('repairer', spawn);
-         }
+             this.createCustomCreep('scout', spawn);
+         }*/
          for(var name in this.C)
          {
             let c = this.C[name];
@@ -149,35 +160,38 @@
                 console.log("Creep name: " + c.name + " doesn't have a role!");
             }
          }
+         }
      },
      
      createCustomCreep: function(creepType, spawn) {
-         var newName = creepType + Game.time;
+         var newName = creepType + Game.time % 1000;
          if(spawn.spawnCreep(this.creepParts(creepType), newName, {memory: {role: creepType, upgrading: false}}) == 0) { // Will want to change setup in the future
-            console.log('Spawning new ' + creepType + ': ' + newName);
+            console.log('Spawning new ' + creepType + ': ' + newName + " in room " + this.R.name);
          }
      },
      
      creepParts: function(creepType) {
          var parts = [];
-         var exempt = CARRY;
+         var exempt = '';
          switch (creepType) {
              case 'builder':
-                 parts =  [WORK,CARRY,CARRY,MOVE,MOVE];
+                 parts =  [WORK,CARRY,CARRY,MOVE];
                  break;
              case 'shifter':
                  parts = [CARRY,CARRY,MOVE,MOVE];
                  break;
              case 'scout':
-                 parts = [TOUGH,MOVE,ATTACK];
-                 return parts; // Don't want to make the best possible, want it to be cheap.
-                 break;
-             case 'repairer':
-                 parts = [WORK,CARRY,MOVE]; // same as above
+                 parts = [TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK];
                  return parts;
                  break;
+             case 'repairer':
+                 parts = [WORK,CARRY,CARRY,MOVE,MOVE];
+                 return parts;
+                 break;
+             case 'upgrader':
+                 parts = [WORK,CARRY,CARRY,MOVE,MOVE];
              default:
-                parts = [WORK,CARRY,MOVE];
+                parts = [WORK,CARRY,MOVE,WORK];
          }
          var e = this.R.energyAvailable;
          for(var part in parts)
