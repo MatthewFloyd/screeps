@@ -8,6 +8,7 @@
  */
 
 var spawnManager = require('spawnManager');
+var setup = require('setup');
 
 var baseBuilder = {
      
@@ -31,13 +32,12 @@ var baseBuilder = {
          //this.visual(controller.level);
          if(this.build(controller.level) == true)
          {
-             this.R.memory.setupLevel = controller.level;
+             this.R.memory.setupLevel = this.R.controller.level;
              console.log("Base building at room: " + this.R.name + " for level: " + controller.level + " is complete!");
          }
      },
      
      build: function(controllerLevel) {
-         
          let maxExtensions = CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][controllerLevel];
          let extensions = this.R.find(FIND_MY_STRUCTURES, {
              filter: (s) => {
