@@ -10,7 +10,8 @@
 module.exports = {
     /** @param {Creep} creep **/
     run: function(creep) {
-        
+        var s = creep.room.find(FIND_STRUCTURES, 
+                                {filter: (s) => s.structureType == STRUCTURE_STORAGE});
 	    if(creep.memory.upgrading) {
 	        let resourcePoints = [];
             for(var spawn in creep.room.memory.spawns)
@@ -32,10 +33,36 @@ module.exports = {
                     }
                 }
             }
-            resourcePoints.sort(function(a, b) {return a.energy - b.energy});
-            if(creep.transfer(resourcePoints[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+            var towers = creep.room.find(FIND_MY_STRUCTURES, 
+                                {filter: (s) => s.structureType == STRUCTURE_TOWER});
+            if(towers != "")
             {
-                creep.moveTo(resourcePoints[0]);
+                for(var t in towers)
+                {
+                    if(towers[t].energy < towers[t].energyCapacity)
+                    {
+                        resourcePoints.push(towers[t]);
+                    }
+                }
+            }
+            if(resourcePoints.length > 0)
+            {
+                let n = creep.pos.findClosestByRange(resourcePoints);
+                if(creep.transfer(n, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                {
+                    creep.moveTo(n);
+                }
+            }
+            else
+            {
+                
+                if(s.length > 0)
+                {
+                    if(creep.transfer(s[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    {
+                        creep.moveTo(s[0]);
+                    }
+                }
             }
 	        if(creep.carry.energy == 0)
 	        {
@@ -43,13 +70,27 @@ module.exports = {
 	        }
         }
         else {
+            
             let containers = creep.room.find(FIND_STRUCTURES, {
                 filter: (s) => (s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 0)
             });
-            containers.sort(function(a, b) {return b.store[RESOURCE_ENERGY] - a.store[RESOURCE_ENERGY]});
-            if(creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+            if(containers.length > 0)
             {
-                creep.moveTo(containers[0]);
+                containers.sort(function(a, b) {return b.store[RESOURCE_ENERGY] - a.store[RESOURCE_ENERGY]});
+                if(creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                {
+                    creep.moveTo(containers[0]);
+                }
+            }
+            else
+            {
+                if(s.length > 0)
+                {
+                    if(creep.withdraw(s[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    {
+                        creep.moveTo(s[0]);
+                    }
+                }
             }
             if(creep.carry.energy == creep.carryCapacity)
             {
