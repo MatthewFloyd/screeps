@@ -15,9 +15,10 @@ module.exports = {
 	        var R = creep.room.find(FIND_STRUCTURES, {
 	            filter: (s) => {return s.hits < s.hitsMax}
 	        });
-	        if(creep.repair(R[0]) == ERR_NOT_IN_RANGE)
+	        let target = creep.pos.findClosestByRange(R);
+	        if(creep.repair(target) == ERR_NOT_IN_RANGE)
 	        {
-	            creep.moveTo(R[0]);
+	            creep.moveTo(target);
 	        }
 	        if(creep.carry.energy == 0)
 	        {

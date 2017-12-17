@@ -11,18 +11,30 @@ var roleHarvester = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-	    if(creep.carry.energy < creep.carryCapacity) {
+        /*
+        let cSiteAtPos = creep.pos.lookFor(LOOK_STRUCTURES, 
+                            {filter: (s) => s.structureType == STRUCTURE_ROAD});
+        if(cSiteAtPos == "")
+        {
+            creep.pos.createConstructionSite(STRUCTURE_ROAD);
+        }
+        */
+	    if(creep.memory.upgrading == false) {
             let harvestSource = Game.getObjectById(creep.memory.s);
             if(creep.harvest(harvestSource) == ERR_NOT_IN_RANGE)
             {
                 creep.moveTo(harvestSource, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
+            if(creep.carry.energy == creep.carryCapacity)
+            {
+                creep.memory.upgrading = true;
+            }
         }
         else {
             let container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (s) => s.structureType == STRUCTURE_CONTAINER
+                filter: (s) => s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] < s.storeCapacity
             });
-            if(container == undefined || container.store[RESOURCE_ENERGY] == container.storeCapacity)
+            if(container == undefined)
             {
                 let resourcePoints = [];
                 for(var spawn in creep.room.memory.spawns)
@@ -44,7 +56,9 @@ var roleHarvester = {
                         }
                     }
                 }
+                
                 resourcePoints.sort(function(a, b) {return a.energy - b.energy});
+                //console.log(resourcePoints[0] + " " + resourcePoints[0].energy);
                 if(creep.transfer(resourcePoints[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                 {
                     creep.moveTo(resourcePoints[0]);
@@ -56,6 +70,10 @@ var roleHarvester = {
                 {
                     creep.moveTo(container);
                 }
+            }
+            if(creep.carry.energy == 0)
+            {
+                creep.memory.upgrading = false;
             }
             
         }

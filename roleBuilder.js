@@ -32,7 +32,7 @@ var roleBuilder = {
 	    else
 	    {
 	        let container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (s) => (s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 0)
+                filter: (s) => ((s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE) && s.store[RESOURCE_ENERGY] > 0)
             });
             if(container == undefined)
             {
@@ -40,7 +40,7 @@ var roleBuilder = {
                 for(var spawn in creep.room.memory.spawns)
                 {
                     let s = Game.getObjectById(creep.room.memory.spawns[spawn]);
-                    if(s.energy >= 200)
+                    if(s.energy > 250)
                     {
                         resourcePoints.push(s);
                     }
