@@ -20,4 +20,8 @@ var roleTower = {
 	}
 };
 
+<<<<<<< HEAD
 module.exports = roleTower;
+=======
+module.exports = roleTower;
+>>>>>>> 922ec387b83c2bd69ed717b18befd159341f1da8
