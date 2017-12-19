@@ -30,7 +30,6 @@ var roleUpgrader = {
 	        
 	        if(storagePoint)
 	        {
-<<<<<<< HEAD
 	            
 	            var nearest = creep.pos.findClosestByRange(storagePoint);
                 if(creep.withdraw(nearest, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
@@ -43,11 +42,6 @@ var roleUpgrader = {
 	            var resourcePoints = [];
 	            if(creep.room.memory.extensions)
                 {
-=======
-	            var resourcePoints = [];
-	            if(creep.room.memory.extensions)
-                {
->>>>>>> 922ec387b83c2bd69ed717b18befd159341f1da8
                     for(var e in creep.room.memory.extensions)
                     {
                         let a = Game.getObjectById(creep.room.memory.extensions[e]);
@@ -66,21 +60,10 @@ var roleUpgrader = {
                 }
                 else
                 {
-<<<<<<< HEAD
                     
                     if(storagePoint.length > 0)
                     {
                         
-=======
-                    var storagePoint = creep.room.find(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_STORAGE});
-                    if(storagePoint.length > 0)
-                    {
-                        var nearest = creep.pos.findClosestByRange(storagePoint);
-                        if(creep.withdraw(nearest) == ERR_NOT_IN_RANGE)
-                        {
-                            creep.moveTo(nearest);
-                        }
->>>>>>> 922ec387b83c2bd69ed717b18befd159341f1da8
                     }
                     else
                     {
