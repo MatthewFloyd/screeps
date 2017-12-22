@@ -54,7 +54,7 @@ module.exports.loop = function () {
         
         
         
-        if(R.memory.spawns[0] != undefined)
+        if(R != undefined)
         {
             spawnManager.run(room);
             let towers = R.find(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER});
