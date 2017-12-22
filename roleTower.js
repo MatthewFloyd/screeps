@@ -16,6 +16,10 @@ var roleTower = {
             let nearest = tower.pos.findClosestByRange(hostiles);
             tower.attack(nearest);
         }
+        if(tower.hits < (tower.hitsMax / 4))
+        {
+            tower.room.controller.activateSafeMode();
+        }
 	    
 	}
 };
