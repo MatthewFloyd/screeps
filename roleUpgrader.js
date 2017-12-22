@@ -28,9 +28,8 @@ var roleUpgrader = {
 	        let harvestSource = Game.getObjectById(creep.room.memory.sources[1]); // TODO fix this
 	        var storagePoint = creep.room.find(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_STORAGE && s.store[RESOURCE_ENERGY] > 0});
 	        
-	        if(storagePoint)
+	        if(storagePoint.length > 0)
 	        {
-	            
 	            var nearest = creep.pos.findClosestByRange(storagePoint);
                 if(creep.withdraw(nearest, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                 {
