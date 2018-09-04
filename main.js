@@ -38,10 +38,13 @@ module.exports.loop = function () {
         else if(Game.rooms[room].memory.setup < Game.rooms[room].controller.level)
         {
             // room has controller and setup is under level
-            var finished = setup.run(Game.rooms[room], Game.rooms[room].controller.level);
-            if(finished)
+            if(Game.rooms[room].my) // check run setup and make sure I own it.
             {
-                Game.rooms[room].memory.setup = Game.rooms[room].controller.level;
+                var finished = setup.run(Game.rooms[room], Game.rooms[room].controller.level);
+                if(finished)
+                {
+                    Game.rooms[room].memory.setup = Game.rooms[room].controller.level;
+                }
             }
         }
 
