@@ -32,7 +32,7 @@ var setup = {
                 room.memory.mineral = [];
                 for(var m in mineral)
                 {
-                    room.memory.mineral.push(m.id);
+                    room.memory.mineral.push(mineral[m].id);
                 }
             }
             if(setupLvL >= 0) // has a controller
