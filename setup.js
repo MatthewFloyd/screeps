@@ -10,7 +10,7 @@ var setup = {
             // find sources and mineral
             const sources = room.find(FIND_SOURCES);
             const mineral = room.find(FIND_MINERALS);
-            const spawns = room.find(STRUCTURE_SPAWN);
+            const spawns = room.find(FIND_MY_SPAWNS);
 
             if(sources.length)
             {
@@ -18,13 +18,7 @@ var setup = {
                 for(var s in sources)
                 {
                     room.memory.sources.push(sources[s].id);
-                }
-                if(room.memory.sources.length)
-                {
-                    for(var c in room.memory.sources)
-                    {
-                        sources[c].harvesterPartCount = 0;
-                    }
+                    room.memory.sources.push(0); // harvester work part counter
                 }
             }
             if(mineral.length)
@@ -32,7 +26,7 @@ var setup = {
                 room.memory.mineral = [];
                 for(var m in mineral)
                 {
-                    room.memory.mineral.push(m.id);
+                    room.memory.mineral.push(mineral[m].id);
                 }
             }
             if(setupLvL >= 0) // has a controller
@@ -45,7 +39,7 @@ var setup = {
                     {
                         for(var S in spawns)
                         {
-                            room.memory.spawns.push(S.id);
+                            room.memory.spawns.push(spawns[S].id);
                         }
                     }
                 }

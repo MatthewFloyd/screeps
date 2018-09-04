@@ -4,33 +4,39 @@ var sourceAssign = {
 
     init: function (room, workPartCount) {
         var sources = room.memory.sources;
-        for(var S in sources)
+        for(var S=0; S < sources.length; S += 2)
         {
-            if(S.harvesterPartCount === undefined)
+            if(sources[S+1] === undefined)
             {
-                S.harvesterPartCount = workPartCount;
+                sources[S+1] = workPartCount;
             }
-            else if(S.harvesterPartCount <= (5 - workPartCount))
+            else if(sources[S+1] <= (5 - workPartCount))
             {
                 // we have space on this source for the new worker
-                S.harvesterPartCount += workPartCount;
-                return S;
+                sources[S+1] += workPartCount;
+                return sources[S];
             }
             // Otherwise no space on this source
         }
         return -1; // We didn't find any available source
     },
     check: function (room, workPartCount) {
-        var hasSpace = false;
-        for(var S in room.memory.sources)
+        var sources = room.memory.sources;
+        for(var S=0; S < sources.length; S += 2)
         {
-            if(S.harvesterPartCount <= (5 - workPartCount))
+            if(sources[S+1] === undefined)
             {
-                hasSpace = true;
-                break;
+                // no modification
+                return sources[S];
             }
+            else if(sources[S+1] <= (5 - workPartCount))
+            {
+                // we have space on this source for the new worker
+                return sources[S];
+            }
+            // Otherwise no space on this source
         }
-        return hasSpace;
+        return -1; // We didn't find any available source
     }
 };
 
