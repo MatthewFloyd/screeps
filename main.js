@@ -47,12 +47,14 @@ module.exports.loop = function () {
                 }
             }
         }
+        //setup.run(Game.rooms[room], 1); // temp
 
         if(Game.rooms[room].memory.setup >= 0 && Game.rooms[room].controller.my) // check the queue for spawn requests
         {
             // We have at least a basic setup and we control the room
             var queue = Game.rooms[room].memory.spawnqueue;
             // check queue for spawn requests
+            
             if(queue.length)
             {   // TODO: refactor for multiple spawns
                 var valid = spawnRequest.run(Game.rooms[room], queue[0]);
@@ -69,7 +71,12 @@ module.exports.loop = function () {
         // have no creeps so add a spawn request.
         for(var room in Game.rooms)
         {
-            if(Game.rooms[room].controller.my)
+            var S = Game.rooms[room].memory.sources;
+            for(var a = 1; a < S.length; a += 2)
+            {
+                S[a] = 0; // reset harvesterworkcounts
+            }
+            if(Game.rooms[room].controller.my && Game.rooms[room].memory.spawnqueue.length === 0)
             {
                 Game.rooms[room].memory.spawnqueue.push("harvester");
             }
@@ -79,36 +86,36 @@ module.exports.loop = function () {
     // finally run all the creeps that we own
     for(var creep in Game.creeps)
     {
-        if(!creep.spawning) // not spawning so do stuff
+        if(!Game.creeps[creep].spawning) // not spawning so do stuff
         {
-            if(creep.memory.travel)
+            if(Game.creeps[creep].memory.travel)
             { // if it's going somewhere just moveTo that roomPosition after checking if it made it
-                var XYR = creep.memory.travelDest.split(" "); // [0] = x, [1] = y, [2] = room
+                var XYR = Game.creeps[creep].memory.travelDest.split(" "); // [0] = x, [1] = y, [2] = room
                 const pos = new RoomPosition(XYR[0], XYR[1], XYR[2]);
-                if(creep.pos.isNearTo(pos)) // we are at the destination
+                if(Game.creeps[creep].pos.isNearTo(pos)) // we are at the destination
                 {
-                    creep.memory.travel = false;
+                    Game.creeps[creep].memory.travel = false;
                     console.log("Holy shit the test worked!");
                 }
                 else // not there yet
                 {
-                    creep.moveTo(pos);
+                    Game.creeps[creep].moveTo(pos);
                 }
             }
 
-            if(ticksToLive <= 1)// going to die: do clean up before memory death
+            if(Game.creeps[creep].ticksToLive <= 1)// going to die: do clean up before memory death
             {
-                if(creep.memory.sourceId) // check if it was harvesting
+                if(Game.creeps[creep].memory.sourceId) // check if it was harvesting
                 {
                     var workCount = 0;
-                    for(var part in creep.body)
+                    for(var part in Game.creeps[creep].body)
                     {
                         if(part.type === WORK)
                         {
                             workCount += 1;
                         }
                     }
-                    creep.room.memory.sources[creep.memory.sourceId].harvesterPartCount -= workCount;
+                    Game.creeps[creep].room.memory.sources[Game.creeps[creep].memory.sourceId].harvesterPartCount -= workCount;
                 }
             }
         }
