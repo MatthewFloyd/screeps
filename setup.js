@@ -17,13 +17,13 @@ var setup = {
                 room.memory.sources = [];
                 for(var s in sources)
                 {
-                    room.memory.sources.push(s.id);
+                    room.memory.sources.push(sources[s].id);
                 }
                 if(room.memory.sources.length)
                 {
                     for(var c in room.memory.sources)
                     {
-                        c.harvesterPartCount = 0;
+                        sources[c].harvesterPartCount = 0;
                     }
                 }
             }
@@ -35,7 +35,7 @@ var setup = {
                     room.memory.mineral.push(m.id);
                 }
             }
-            if(setupLvl >= 0) // has a controller
+            if(setupLvL >= 0) // has a controller
             {
                 if(room.controller.my)
                 {

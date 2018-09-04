@@ -16,39 +16,43 @@ module.exports.loop = function () {
 
     for(var room in Game.rooms)
     {
+        if(!Game.rooms[room].memory)
+        {
+            Game.rooms[room] = [];
+        }
         // Check memory object is proper
-        if(room.memory.setup === (undefined && room.memory.setup === null))
+        if(Game.rooms[room].memory.setup === (undefined && Game.rooms[room].memory.setup === null))
         {
             // undefined memory
-            if(room.controller === undefined)
+            if(Game.rooms[room].controller === undefined)
             {
                 // room has no controller
-                setup.run(room, -1);
-                room.memory.setup = 0;
+                setup.run(Game.rooms[room], -1);
+                Game.rooms[room].memory.setup = 0;
             }
             else
             {
-                setup.run(room, 1);
+                setup.run(Game.rooms[room], 1);
             }
         }
-        else if(room.memory.setup < room.controller.level)
+        else if(Game.rooms[room].memory.setup < Game.rooms[room].controller.level)
         {
             // room has controller and setup is under level
-            var finished = setup.run(room, room.controller.level);
+            var finished = setup.run(Game.rooms[room], Game.rooms[room].controller.level);
             if(finished)
             {
-                room.memory.setup = room.controller.level;
+                Game.rooms[room].memory.setup = Game.rooms[room].controller.level;
             }
         }
 
-        if(room.memory.setup >= 0 && room.controller.my) // check the queue for spawn requests
+        if(Game.rooms[room].memory.setup >= 0 && Game.rooms[room].controller.my) // check the queue for spawn requests
         {
             // We have at least a basic setup and we control the room
-            var queue = room.memory.spawnqueue;
+            var queue = Game.rooms[room].memory.spawnqueue;
             // check queue for spawn requests
             if(queue.length)
             {   // TODO: refactor for multiple spawns
-                var valid = spawnRequest(room, queue[0]);
+                var valid = spawnRequest.run(Game.rooms[room], queue[0]);
                 if(valid)
                 {
                     queue.pop(); // take the top request off the queue
@@ -62,9 +66,9 @@ module.exports.loop = function () {
         // have no creeps so add a spawn request.
         for(var room in Game.rooms)
         {
-            if(room.controller.my)
+            if(Game.rooms[room].controller.my)
             {
-                room.memory.spawnqueue.push("harvester");
+                Game.rooms[room].memory.spawnqueue.push("harvester");
             }
         }
     }
