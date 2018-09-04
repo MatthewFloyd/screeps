@@ -54,11 +54,6 @@ module.exports.loop = function () {
             // We have at least a basic setup and we control the room
             var queue = Game.rooms[room].memory.spawnqueue;
             // check queue for spawn requests
-<<<<<<< HEAD
-
-=======
-            
->>>>>>> 9f4952c9c4fb59d99cf9c042324bc2c19c5072d6
             if(queue.length)
             {   // TODO: refactor for multiple spawns
                 var valid = spawnRequest.run(Game.rooms[room], queue[0]);
