@@ -54,7 +54,11 @@ module.exports.loop = function () {
             // We have at least a basic setup and we control the room
             var queue = Game.rooms[room].memory.spawnqueue;
             // check queue for spawn requests
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> 9f4952c9c4fb59d99cf9c042324bc2c19c5072d6
             if(queue.length)
             {   // TODO: refactor for multiple spawns
                 var valid = spawnRequest.run(Game.rooms[room], queue[0]);
@@ -71,11 +75,19 @@ module.exports.loop = function () {
         // have no creeps so add a spawn request.
         for(var room in Game.rooms)
         {
+<<<<<<< HEAD
             /*var S = Game.rooms[room].memory.sources;
             for(var a = 1; a < S.length; a += 2)
             {
                 S[a] = 0; // reset harvesterworkcounts
             }*/
+=======
+            var S = Game.rooms[room].memory.sources;
+            for(var a = 1; a < S.length; a += 2)
+            {
+                S[a] = 0; // reset harvesterworkcounts
+            }
+>>>>>>> 9f4952c9c4fb59d99cf9c042324bc2c19c5072d6
             if(Game.rooms[room].controller.my && Game.rooms[room].memory.spawnqueue.length === 0)
             {
                 Game.rooms[room].memory.spawnqueue.push("harvester");
