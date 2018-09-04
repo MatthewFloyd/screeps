@@ -19,6 +19,13 @@ var setup = {
                 {
                     room.memory.sources.push(s.id);
                 }
+                if(room.memory.sources.length)
+                {
+                    for(var c in room.memory.sources)
+                    {
+                        c.harvesterPartCount = 0;
+                    }
+                }
             }
             if(mineral.length)
             {

@@ -1,5 +1,7 @@
 "use strict";
 
+var sourceAssign = require('sourceAssign');
+
 var spawner;
 var Room;
 var spawnRequest = {
@@ -21,6 +23,7 @@ var spawnRequest = {
 
                     break;
                 default:
+                    break;
                     // generic builder: used at level 1 or in case of emergency
             }
         }
@@ -30,11 +33,20 @@ var spawnRequest = {
         if(!spawner.spawning) // Not already spawning something
         {//{memory: {role: 'harvester', s: harvestSource, upgrading: false}}
             var Rnum = Game.time % 100;
-            spawner.spawnCreep(creepParts, 'Harvester' + Rnum, {
-                memory: {
-                    // TODO seperate module with source assigner
-                }
-            })
+            if(sourceAssign.check(Room, creepParts.length) !== -1) {
+                var Sid = sourceAssign.init(Room, creepParts.length);
+                var sourcePos = Game.getObjectById(Sid);
+                sourcePos = sourcePos.pos;
+                var travelDest = sourcePos.x + " " + sourcePos.y + " " + sourcePos.room;
+                spawner.spawnCreep(creepParts, 'Harvester' + Rnum, {
+                    memory: {
+                        home: Room.id,
+                        sourceId: Sid,
+                        travel: true,
+                        travelDest: travelDest
+                    }
+                });
+            }
         }
     },
     calcParts: function(room, creepType)
