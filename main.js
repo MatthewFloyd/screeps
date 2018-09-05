@@ -2,6 +2,7 @@
 
 var setup = require('setup');
 var spawnRequest = require('spawnRequest');
+var genericCreep = require('genericCreep');
 
 module.exports.loop = function () {
 
@@ -85,7 +86,7 @@ module.exports.loop = function () {
                 if(Game.creeps[creep].pos.isNearTo(pos)) // we are at the destination
                 {
                     Game.creeps[creep].memory.travel = false;
-                    console.log("Holy shit the test worked!");
+                    genericCreep.run(creep);
                 }
                 else // not there yet
                 {
