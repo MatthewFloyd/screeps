@@ -51,6 +51,14 @@ module.exports.loop = function () {
 
         if(Game.rooms[room].memory.setup >= 0 && Game.rooms[room].controller.my) // check the queue for spawn requests
         {
+            // temp delete later but this is to get started
+            if(Game.creeps.length < 1 || (!Game.creeps.length))
+            {
+                if(Game.rooms[room].controller.my && Game.rooms[room].memory.spawnqueue.length === 0)
+                {
+                    Game.rooms[room].memory.spawnqueue.push("harvester");
+                }
+            }
             // We have at least a basic setup and we control the room
             var queue = Game.rooms[room].memory.spawnqueue;
             // check queue for spawn requests
@@ -61,23 +69,6 @@ module.exports.loop = function () {
                 {
                     queue.pop(); // take the top request off the queue
                 }
-            }
-        }
-    }
-    // temp delete later but this is to get started
-    if(Game.creeps.length < 1 || (!Game.creeps.length))
-    {
-        // have no creeps so add a spawn request.
-        for(var room in Game.rooms)
-        {
-            /*var S = Game.rooms[room].memory.sources;
-            for(var a = 1; a < S.length; a += 2)
-            {
-                S[a] = 0; // reset harvesterworkcounts
-            }*/
-            if(Game.rooms[room].controller.my && Game.rooms[room].memory.spawnqueue.length === 0)
-            {
-                Game.rooms[room].memory.spawnqueue.push("harvester");
             }
         }
     }
