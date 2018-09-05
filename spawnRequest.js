@@ -27,6 +27,7 @@ var spawnRequest = {
                 // generic builder: used at level 1 or in case of emergency
             }
         }
+        return false;
     },
     harvesterSpawn: function(creepParts)
     {
@@ -38,14 +39,18 @@ var spawnRequest = {
                 var source = Game.getObjectById(Sid);
                 var sourcePos = source.pos;
                 var travelDest = sourcePos.x + " " + sourcePos.y + " " + source.room.name;
-                spawner.spawnCreep(creepParts, 'Harvester' + Rnum, {
+                if(spawner.spawnCreep(creepParts, 'Harvester' + Rnum, {
                     memory: {
                         home: Room.id,
+                        role: 'harvester'
                         sourceId: Sid,
                         travel: true,
                         travelDest: travelDest
                     }
-                });
+                }) === 0) // good spawn
+                {
+                    return true;
+                }
             }
         }
     },
