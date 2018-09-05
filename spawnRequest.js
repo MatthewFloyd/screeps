@@ -23,11 +23,38 @@ var spawnRequest = {
 
                     break;
                 default:
+                // generic small creep used for emergency or super low level
+                    this.genericSpawn(this.caclParts(room, creepType));
                     break;
                 // generic builder: used at level 1 or in case of emergency
             }
         }
         return false;
+    },
+    genericSpawn: function(creepParts)
+    {
+        if(!spawner.spawning) // Not already spawning something
+        {//{memory: {role: 'harvester', s: harvestSource, upgrading: false}}
+            var Rnum = Game.time % 100;
+            if(sourceAssign.check(Room, creepParts.length) !== -1) {
+                var Sid = sourceAssign.check(Room, creepParts.length);
+                var source = Game.getObjectById(Sid);
+                var sourcePos = source.pos;
+                var travelDest = sourcePos.x + " " + sourcePos.y + " " + source.room.name;
+                if(spawner.spawnCreep(creepParts, 'Gen' + Rnum, {
+                    memory: {
+                        home: Room.id,
+                        role: 'generic'
+                        sourceId: Sid,
+                        travel: true,
+                        travelDest: travelDest
+                    }
+                }) === 0) // good spawn
+                {
+                    return true;
+                }
+            }
+        }
     },
     harvesterSpawn: function(creepParts)
     {
