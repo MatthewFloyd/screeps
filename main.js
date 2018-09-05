@@ -114,7 +114,7 @@ module.exports.loop = function () {
                             workCount += 1;
                         }
                     }
-                    Game.creeps[creep].room.memory.sources[Game.creeps[creep].memory.sourceId].harvesterPartCount -= workCount;
+                    Game.creeps[creep].room.memory.sources[Game.creeps[creep].memory.sourceId + 1] -= workCount;
                 }
             }
         }
