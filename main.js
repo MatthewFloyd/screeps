@@ -6,9 +6,11 @@ var genericCreep = require('genericCreep');
 
 module.exports.loop = function () {
 
+    var totalCreeps = 0;
     // Delete old creeps
     for(var name in Memory.creeps)
     {
+        totalCreeps += 1;
         if(!Game.creeps[name]) { // check existence
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
@@ -63,7 +65,7 @@ module.exports.loop = function () {
             // We have at least a basic setup and we control the room
             var queue = Game.rooms[room].memory.spawnqueue;
             // check queue for spawn requests
-            if(queue.length && Game.creeps.length < 5) // temp fix until queuepop bug is fixed
+            if(queue.length && totalCreeps < 5) // temp fix until queuepop bug is fixed
             {   // TODO: refactor for multiple spawns
                 var valid = spawnRequest.run(Game.rooms[room], queue[0]);
                 if(valid)
