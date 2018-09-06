@@ -69,7 +69,7 @@ var spawnRequest = {
                 if(spawner.spawnCreep(creepParts, 'Harvester' + Rnum, {
                     memory: {
                         home: Room.id,
-                        role: 'harvester'
+                        role: 'harvester',
                         sourceId: Sid,
                         travel: true,
                         travelDest: travelDest
