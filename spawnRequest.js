@@ -44,7 +44,7 @@ var spawnRequest = {
                 if(spawner.spawnCreep(creepParts, 'Gen' + Rnum, {
                     memory: {
                         home: Room.id,
-                        role: 'generic'
+                        role: 'generic',
                         sourceId: Sid,
                         travel: true,
                         travelDest: travelDest
