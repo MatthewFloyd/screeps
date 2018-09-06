@@ -18,7 +18,23 @@ var genericCreep = {
             }
             else // not at source
             {
-                
+                var spawn = creep.room.memory.spawns[0]; // update later
+                var spawn = Game.getObjectById(spawn);
+                // check for case at spawn and full energy
+                if(creep.pos.isNearTo(spawn)) // at spawn
+                {
+                    if(creep.transfer(spawn, RESOURCE_ENERGY) !== 0)
+                    {
+                        console.log(creep.name + " transfer to spawn problem!");
+                    }
+                }
+                else if(creep.pos.isNearTo(creep.room.controller)) // at controller
+                {
+                    if(creep.upgradeController(creep.room.controller) !== 0)
+                    {
+                        console.log(creep.name + " upgrade controller error!");
+                    }
+                }
             }
         }
         else // we have full energy
@@ -31,13 +47,24 @@ var genericCreep = {
             // check for case at spawn and full energy
             if(creep.pos.isNearTo(spawn)) // at spawn
             {
-                // TODO
+                if(creep.transfer(spawn, RESOURCE_ENERGY) !== 0)
+                {
+                    console.log(creep.name + " transfer to spawn problem!");
+                }
+            }
+            else if(creep.pos.isNearTo(creep.room.controller)) // at controller
+            {
+                if(creep.upgradeController(creep.room.controller) !== 0)
+                {
+                    console.log(creep.name + " upgrade controller error!");
+                }
             }
             if(spawn.energy < (spawn.energyCapacity - creep.carryCapacity)) // is it worth it?
             {
                 const newTravelDest = spawn.pos.x + " " + spawn.pos.y + creep.room.name;
                 creep.memory.traveDest = newTravelDest;
                 creep.memory.travel = true;
+                creep.moveTo(spawn.pos);
             }
         }
     }
