@@ -35,7 +35,7 @@ var genericCreep = {
                         console.log(creep.name + " transfer to spawn problem!");
                     }
                 }
-                else if(creep.pos.isNearTo(creep.room.controller)) // at controller
+                else if(creep.pos.inRangeTo(creep.room.controller, 3)) // at controller
                 {
                     if(creep.upgradeController(creep.room.controller) !== 0)
                     {
@@ -60,7 +60,7 @@ var genericCreep = {
                     console.log(creep.name + " transfer to spawn problem!");
                 }
             }
-            else if(creep.pos.isNearTo(creep.room.controller)) // at controller
+            else if(creep.pos.inRangeTo(creep.room.controller, 3)) // at controller
             {
                 if(creep.upgradeController(creep.room.controller) !== 0)
                 {
