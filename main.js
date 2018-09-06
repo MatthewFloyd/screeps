@@ -63,7 +63,7 @@ module.exports.loop = function () {
             // We have at least a basic setup and we control the room
             var queue = Game.rooms[room].memory.spawnqueue;
             // check queue for spawn requests
-            if(queue.length)
+            if(queue.length && Game.creeps.length < 5) // temp fix until queuepop bug is fixed
             {   // TODO: refactor for multiple spawns
                 var valid = spawnRequest.run(Game.rooms[room], queue[0]);
                 if(valid)
