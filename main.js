@@ -83,7 +83,7 @@ module.exports.loop = function () {
             { // if it's going somewhere just moveTo that roomPosition after checking if it made it
                 var XYR = Game.creeps[creep].memory.travelDest.split(" "); // [0] = x, [1] = y, [2] = room
                 const pos = new RoomPosition(XYR[0], XYR[1], XYR[2]);
-                if(Game.creeps[creep].pos.isNearTo(pos)) // we are at the destination
+                if(Game.creeps[creep].pos.isNearTo(pos) || Game.creeps[creep].pos.inRangeTo(Game.creeps[creep].room.controller, 3)) // we are at the destination
                 {
                     Game.creeps[creep].memory.travel = false;
                 }
