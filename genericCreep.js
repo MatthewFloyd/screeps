@@ -18,6 +18,13 @@ var genericCreep = {
             }
             else // not at source
             {
+                if(total === 0)// no energy, go back to source
+                {
+                    const newTravelDest = source.pos.x + " " + source.pos.y +  " " + creep.room.name;
+                    creep.memory.travelDest = newTravelDest;
+                    creep.memory.travel = true;
+                    creep.moveTo(source.pos);
+                }
                 var spawn = creep.room.memory.spawns[0]; // update later
                 var spawn = Game.getObjectById(spawn);
                 // check for case at spawn and full energy
@@ -42,6 +49,7 @@ var genericCreep = {
             // set new destination and start travel
             
             // check spawn to see if energy needed, otherwise upgrade controller
+            console.log(creep.room);
             var spawn = creep.room.memory.spawns[0]; // update later
             var spawn = Game.getObjectById(spawn);
             // check for case at spawn and full energy
@@ -61,10 +69,17 @@ var genericCreep = {
             }
             if(spawn.energy < (spawn.energyCapacity - creep.carryCapacity)) // is it worth it?
             {
-                const newTravelDest = spawn.pos.x + " " + spawn.pos.y + creep.room.name;
-                creep.memory.traveDest = newTravelDest;
+                const newTravelDest = spawn.pos.x + " " + spawn.pos.y +  " " + creep.room.name;
+                creep.memory.travelDest = newTravelDest;
                 creep.memory.travel = true;
                 creep.moveTo(spawn.pos);
+            }
+            else
+            {
+                const newTravelDest = creep.room.controller.pos.x + " " + creep.room.controller.pos.y +  " " + creep.room.name;
+                creep.memory.travelDest = newTravelDest;
+                creep.memory.travel = true;
+                creep.moveTo(creep.room.controller.pos);
             }
         }
     }
