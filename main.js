@@ -86,12 +86,15 @@ module.exports.loop = function () {
                 if(Game.creeps[creep].pos.isNearTo(pos)) // we are at the destination
                 {
                     Game.creeps[creep].memory.travel = false;
-                    genericCreep.run(creep);
                 }
                 else // not there yet
                 {
                     Game.creeps[creep].moveTo(pos);
                 }
+            }
+            else
+            {
+                genericCreep.run(Game.creeps[creep]);
             }
 
             if(Game.creeps[creep].ticksToLive <= 1)// going to die: do clean up before memory death
