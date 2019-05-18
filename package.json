@@ -1,0 +1,29 @@
+{
+  "name": "nano_screeps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^1.0.3",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-file-append": "0.0.7",
+    "grunt-jsbeautifier": "^0.2.13",
+    "grunt-rsync": "^3.0.0",
+    "grunt-screeps": "^1.4.0",
+    "grunt-webpack": "^3.1.3",
+    "screeps-webpack-plugin": "^1.3.0",
+    "time-grunt": "^2.0.0",
+    "webpack": "^4.26.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MatthewFloyd/screeps.git"
+  }
+}
